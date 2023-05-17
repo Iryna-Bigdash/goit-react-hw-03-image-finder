@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Searchbar from './Searchbar/Searchbar';
 import Modal from './Modal/Modal';
 import IconCloseButton from './IconCloseButton/IconCloseButton';
 import { ReactComponent as CloseIcon } from './icons/symbol-defs.svg#icon-close_burger';
@@ -20,6 +21,8 @@ export default class App extends Component {
     const {showModal} = this.state;
     return (
       <>
+    <Searchbar />
+      
       <button type='button' onClick={this.toggleModal}>Open Modal</button>
        {showModal && (
        <Modal onClose={this.toggleModal}> 
