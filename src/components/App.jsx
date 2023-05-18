@@ -8,7 +8,6 @@ import { Toaster } from 'react-hot-toast';
 
 
 
-
 export default class App extends Component {
   state = {
     textSearch: '',
