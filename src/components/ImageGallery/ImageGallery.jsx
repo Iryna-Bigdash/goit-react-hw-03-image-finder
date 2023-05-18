@@ -3,19 +3,25 @@ import { GalleryList } from './ImageGallery.styled';
 import { getPictures } from 'services/getImg';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
-import ErrorPage from "components/ErrorPage/ErrorPage";
+import ErrorPage from 'components/ErrorPage/ErrorPage';
+import LoadMoreBtn from 'components/Button/Button';
 
 class ImageGallery extends Component {
   state = {
     pictures: null,
+    loading: false,
     error: '',
-    status: 'idel',
+    page: 1,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.value !== this.props.value) {
-      this.setState({ status: 'pending' });
-      getPictures(this.props.value.trim())
+    if (
+      prevProps.value !== this.props.value ||
+      prevState.page !== this.state.page
+    ) {
+      this.setState({ loading: true });
+
+      getPictures(this.props.value.trim(), this.state.page)
         .then(response => response.json())
         .then(pictures => {
           if (pictures.hits.length === 0) {
@@ -23,24 +29,34 @@ class ImageGallery extends Component {
               'Unfortunately, nothing was found for your query... Please check the correctness of your input and try again!'
             );
           }
-          this.setState({ pictures, status: 'resolved' });
+          this.setState({ pictures });
         })
-        .catch(error => {
-          this.setState({ error, status: 'rejected' });
+        .catch((error) => {
+          this.setState({ error });
+        })
+        .finally(() =>{ 
+          this.setState({ loading: false })
         });
     }
   }
 
-  render() {
-const { status, pictures, error } = this.state;
+  onLoadMoreClock = () => {
+    this.setState(prev => ({ page: prev.page + 1 }));
+  };
 
-    if (status === 'pending') { return <Loader /> }
-    if (status === 'resolved') {
+  render() {
+    const { pictures, error, loading } = this.state;
+
+    if (loading) {
+      return <Loader />;
+    }
+    if (pictures) {
       return (
         <>
           <ImageGalleryItem data={pictures} />
           <GalleryList>
-            {pictures && pictures.hits.map(el => (
+            {pictures &&
+              pictures.hits.map(el => (
                 <ImageGalleryItem
                   key={el.id}
                   id={el.id}
@@ -49,10 +65,13 @@ const { status, pictures, error } = this.state;
                 />
               ))}
           </GalleryList>
+          <LoadMoreBtn onClick={this.onLoadMoreClock} /> 
         </>
       );
     }
-    if (status === 'rejected') { return <ErrorPage error={error}/>}
+    if (!pictures) {
+      return <ErrorPage error={error} />;
+    }
   }
 }
 
