@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Component } from 'react';
 import SearchButton from 'components/SearchBtnIcon/SearchBtnIcon';
 import {
@@ -50,3 +51,9 @@ class Searchbar extends Component {
 }
 
 export default Searchbar;
+
+
+
+Searchbar.protoType = {
+onSearch: PropTypes.func.isRequired,
+}

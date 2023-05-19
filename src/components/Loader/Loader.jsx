@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 import { LoaderContainer } from './Loader.styled';
-import { RotatingLines } from  'react-loader-spinner';
+import { RotatingLines } from 'react-loader-spinner';
 
 const Loader = () => {
   return (
@@ -16,3 +17,7 @@ const Loader = () => {
 };
 
 export default Loader;
+
+Loader.protoType = {
+  onClick: PropTypes.func.isRequired,
+};

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { GalleryList } from './ImageGallery.styled';
 import { getPictures } from 'services/getImg';
@@ -31,11 +32,11 @@ class ImageGallery extends Component {
           }
           this.setState({ pictures });
         })
-        .catch((error) => {
+        .catch(error => {
           this.setState({ error });
         })
-        .finally(() =>{ 
-          this.setState({ loading: false })
+        .finally(() => {
+          this.setState({ loading: false });
         });
     }
   }
@@ -43,7 +44,6 @@ class ImageGallery extends Component {
   onLoadMoreClock = () => {
     this.setState(prev => ({ page: prev.page + 1 }));
   };
-
 
   render() {
     const { pictures, error, loading } = this.state;
@@ -54,7 +54,6 @@ class ImageGallery extends Component {
     if (pictures) {
       return (
         <>
-          <ImageGalleryItem data={pictures} />
           <GalleryList>
             {pictures &&
               pictures.hits.map(el => (
@@ -67,7 +66,7 @@ class ImageGallery extends Component {
                 />
               ))}
           </GalleryList>
-          <LoadMoreBtn onClick={this.onLoadMoreClock} /> 
+          <LoadMoreBtn onClick={this.onLoadMoreClock} />
         </>
       );
     }
@@ -78,3 +77,7 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
+
+ImageGallery.protoType = {
+  value: PropTypes.string.isRequired,
+};

@@ -28,7 +28,6 @@ export default class App extends Component {
             },
           }}
         />
-
         <Searchbar onSearch={this.handleSubmit} />
         <ImageGallery value={this.state.textSearch} />
       </>

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Modal from 'components/Modal/Modal';
 
@@ -34,3 +35,6 @@ class ImageGalleryItem extends Component {
 
 export default ImageGalleryItem;
 
+ImageGalleryItem.protoType = {
+data: PropTypes.object.isRequired,
+}
