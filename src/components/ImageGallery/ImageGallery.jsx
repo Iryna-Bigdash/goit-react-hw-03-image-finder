@@ -44,6 +44,7 @@ class ImageGallery extends Component {
     this.setState(prev => ({ page: prev.page + 1 }));
   };
 
+
   render() {
     const { pictures, error, loading } = this.state;
 
@@ -61,6 +62,7 @@ class ImageGallery extends Component {
                   key={el.id}
                   id={el.id}
                   webformatURL={el.webformatURL}
+                  largeImageURL={el.largeImageURL}
                   tags={el.tags}
                 />
               ))}

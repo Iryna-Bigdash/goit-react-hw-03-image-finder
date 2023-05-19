@@ -13,11 +13,29 @@ export const ModalContent = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-height: 300px;
-    max-width: 600px;
+    min-height: 50%;
+    max-width: 50%;
     width: 100%;
-    padding: 12px;
+    padding: 50px;
     background-color: white;
     border-radius: 3px;
 
+`
+export const ModalImg = styled.img`
+    display: block;
+    width: 100%;
+    height: 100%;
+`
+
+export const CloseBtn = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: #592859;
+  border: none;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
 `
