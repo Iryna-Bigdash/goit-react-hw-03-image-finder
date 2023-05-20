@@ -5,7 +5,7 @@ export const SearchContainer = styled.header`
   height: 100%;
   display: flex;
   justify-content: center;
-  background-color: #f8ebc1;
+  background-color:  rgba(102, 51, 153, 0.6);
 `;
 
 export const SearchForm = styled.form`
@@ -24,9 +24,9 @@ export const SearchFormBtn = styled.button`
   font-size: 25px;
   font-weight: bold;
   padding: 16px;
-  background-color: #c392dc;
+  background-color: rgba(102, 51, 153);
   opacity: 0.8;
-  color: #52486a;
+  color: white;
   border: none;
   border-radius: 5px;
   border-radius: 4px;

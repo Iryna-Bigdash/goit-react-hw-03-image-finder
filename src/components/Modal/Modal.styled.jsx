@@ -6,18 +6,17 @@ export const ModalBackdrop = styled.div`
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #7d6f6f;
+    background-color: rgba(102, 51, 153, 0.7)
 `
 export const ModalContent = styled.div`
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-height: 50%;
-    max-width: 50%;
+    min-height: 70%;
+    max-width: 70%;
     width: 100%;
     padding: 50px;
-    background-color: white;
     border-radius: 3px;
 
 `
@@ -33,7 +32,7 @@ export const CloseBtn = styled.button`
   right: 10px;
   padding: 5px 10px;
   background-color: transparent;
-  color: #592859;
+  color: #f9ecf9;
   border: none;
   font-size: 25px;
   font-weight: bold;

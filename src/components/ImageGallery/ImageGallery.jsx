@@ -1,5 +1,5 @@
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
 import { GalleryList } from './ImageGallery.styled';
 import { getPictures } from 'services/getImg';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
@@ -9,75 +9,95 @@ import LoadMoreBtn from 'components/Button/Button';
 
 class ImageGallery extends Component {
   state = {
-    pictures: null,
-    loading: false,
+    pictures: [],
     error: '',
     page: 1,
+    status: 'idle',
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.value !== this.props.value ||
-      prevState.page !== this.state.page
-    ) {
-      this.setState({ loading: true });
-
-      getPictures(this.props.value.trim(), this.state.page)
-        .then(response => response.json())
-        .then(pictures => {
-          if (pictures.hits.length === 0) {
-            return Promise.reject(
-              'Unfortunately, nothing was found for your query... Please check the correctness of your input and try again!'
-            );
-          }
-          this.setState({ pictures });
-        })
-        .catch(error => {
-          this.setState({ error });
-        })
-        .finally(() => {
-          this.setState({ loading: false });
-        });
+  componentDidMount() {
+    if (this.props.value.trim() !== '') {
+      this.fetchPictures();
     }
   }
 
-  onLoadMoreClock = () => {
-    this.setState(prev => ({ page: prev.page + 1 }));
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) {
+      this.setState({ pictures: [], page: 1, status: 'pending' }, () => {
+        this.fetchPictures();
+      });
+    }
+  }
+
+  fetchPictures() {
+    const { value } = this.props;
+    const { page } = this.state;
+
+    getPictures(value.trim(), page)
+      .then(response => response.json())
+      .then(data => {
+        if (data.hits.length === 0) {
+          throw new Error(
+            'Unfortunately, nothing was found for your query... Please check the correctness of your input and try again!'
+          );
+        }
+
+        this.setState(prevState => ({
+          pictures: [...prevState.pictures, ...data.hits],
+          status: 'resolved',
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ error: error.message, status: 'rejected' });
+      });
+  }
+
+  onLoadMoreClick = () => {
+    this.setState(
+      prevState => ({ page: prevState.page + 1, status: 'pending' }),
+      () => {
+        this.fetchPictures();
+      }
+    );
   };
 
   render() {
-    const { pictures, error, loading } = this.state;
+    const { pictures, error, status } = this.state;
 
-    if (loading) {
+    if (status === 'pending') {
       return <Loader />;
     }
-    if (pictures) {
+
+    if (status === 'resolved' && pictures.length > 0) {
       return (
         <>
           <GalleryList>
-            {pictures &&
-              pictures.hits.map(el => (
-                <ImageGalleryItem
-                  key={el.id}
-                  id={el.id}
-                  webformatURL={el.webformatURL}
-                  largeImageURL={el.largeImageURL}
-                  tags={el.tags}
-                />
-              ))}
+            {pictures.map(el => (
+              <ImageGalleryItem
+                key={el.id}
+                id={el.id}
+                webformatURL={el.webformatURL}
+                largeImageURL={el.largeImageURL}
+                tags={el.tags}
+              />
+            ))}
           </GalleryList>
-          <LoadMoreBtn onClick={this.onLoadMoreClock} />
+          <LoadMoreBtn onClick={this.onLoadMoreClick} />
         </>
       );
     }
-    if (!pictures) {
+
+    if (status === 'rejected') {
       return <ErrorPage error={error} />;
     }
+
+    return null;
   }
 }
 
-export default ImageGallery;
-
-ImageGallery.protoType = {
+ImageGallery.propTypes = {
   value: PropTypes.string.isRequired,
 };
+
+export default ImageGallery;
