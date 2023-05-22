@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { React, Component } from 'react';
 import Modal from 'components/Modal/Modal';
-
 class ImageGalleryItem extends Component {
   state = {
     showModal: false,
@@ -19,10 +18,23 @@ class ImageGalleryItem extends Component {
     const { id, webformatURL, largeImageURL, tags } = this.props;
     const { showModal } = this.state;
 
+    const liStyles = {
+      cursor: 'pointer',
+      width: '500px',
+      height: '500px',
+    };
+
+    const imgStyle = {
+      display: 'block',
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+    }
+
     return (
       <>
-        <li key={id} onClick={this.openModal}>
-          <img src={webformatURL} alt={tags} />
+        <li style={liStyles} key={id} onClick={this.openModal}>
+          <img style={imgStyle} src={webformatURL} alt={tags} />
         </li>
 
         {showModal && (
@@ -32,6 +44,7 @@ class ImageGalleryItem extends Component {
     );
   }
 }
+
 
 export default ImageGalleryItem;
 

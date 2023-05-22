@@ -5,13 +5,13 @@ display:block;
     margin: 0 auto;
     width: 200px;
     min-height: 50px;
-    background-color: blue;
+    background-color:rgba(102, 51, 153);
     font-size: 25px;
     color: white;
     transition: color 0.3s ease;
 
     &&:hover{
-        color: blue;
+        color: rgba(102, 51, 153);
         background-color: white;
     }
 `

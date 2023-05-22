@@ -23,35 +23,37 @@ class ImageGallery extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {
-      this.setState({ pictures: [], page: 1, status: 'pending' }, () => {
+      this.setState({ pictures: [], page: 1 }, () => {
         this.fetchPictures();
       });
     }
   }
 
-  fetchPictures() {
+  fetchPictures = async () => {
     const { value } = this.props;
     const { page } = this.state;
 
-    getPictures(value.trim(), page)
-      .then(response => response.json())
-      .then(data => {
-        if (data.hits.length === 0) {
-          throw new Error(
-            'Unfortunately, nothing was found for your query... Please check the correctness of your input and try again!'
-          );
-        }
+    try {
+      this.setState({ status: 'pending' });
 
-        this.setState(prevState => ({
-          pictures: [...prevState.pictures, ...data.hits],
-          status: 'resolved',
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-        this.setState({ error: error.message, status: 'rejected' });
-      });
-  }
+      const response = await getPictures(value.trim(), page);
+      const data = await response.json();
+
+      if (data.hits.length === 0) {
+        throw new Error(
+          'Unfortunately, nothing was found for your query... Please check the correctness of your input and try again!'
+        );
+      }
+
+      this.setState(prevState => ({
+        pictures: [...prevState.pictures, ...data.hits],
+        status: 'resolved',
+      }));
+    } catch (error) {
+      console.log(error);
+      this.setState({ error: error.message, status: 'rejected' });
+    }
+  };
 
   onLoadMoreClick = () => {
     this.setState(
@@ -65,34 +67,29 @@ class ImageGallery extends Component {
   render() {
     const { pictures, error, status } = this.state;
 
-    if (status === 'pending') {
-      return <Loader />;
-    }
+    return (
+      <>
+        {status === 'pending' && <Loader />}
 
-    if (status === 'resolved' && pictures.length > 0) {
-      return (
-        <>
-          <GalleryList>
-            {pictures.map(el => (
-              <ImageGalleryItem
-                key={el.id}
-                id={el.id}
-                webformatURL={el.webformatURL}
-                largeImageURL={el.largeImageURL}
-                tags={el.tags}
-              />
-            ))}
-          </GalleryList>
+        <GalleryList>
+          {pictures.map(el => (
+            <ImageGalleryItem
+              key={el.id}
+              id={el.id}
+              webformatURL={el.webformatURL}
+              largeImageURL={el.largeImageURL}
+              tags={el.tags}
+            />
+          ))}
+        </GalleryList>
+
+        {status === 'resolved' && pictures.length > 0 && (
           <LoadMoreBtn onClick={this.onLoadMoreClick} />
-        </>
-      );
-    }
+        )}
 
-    if (status === 'rejected') {
-      return <ErrorPage error={error} />;
-    }
-
-    return null;
+        {status === 'rejected' && <ErrorPage error={error} />}
+      </>
+    );
   }
 }
 
