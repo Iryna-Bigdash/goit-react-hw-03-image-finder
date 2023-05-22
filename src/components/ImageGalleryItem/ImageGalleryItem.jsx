@@ -20,8 +20,8 @@ class ImageGalleryItem extends Component {
 
     const liStyles = {
       cursor: 'pointer',
-      width: '500px',
-      height: '500px',
+      width: '300px',
+      height: '300px',
     };
 
     const imgStyle = {
